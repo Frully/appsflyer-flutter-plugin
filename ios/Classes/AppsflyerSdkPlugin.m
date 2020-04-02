@@ -25,6 +25,36 @@
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:afMethodChannel binaryMessenger:messenger];
     AppsflyerSdkPlugin *instance = [[AppsflyerSdkPlugin alloc] initWithMessenger:messenger];
     [registrar addMethodCallDelegate:instance channel:channel];
+    [registrar addApplicationDelegate:instance];
+}
+
+// Deep linking
+
+// Open URI-scheme for iOS 9 and above
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary *) options {
+  NSLog(@"appsflyer Open URI-scheme for iOS 9 and above openURL %@, options %@", url, options);
+  [[AppsFlyerTracker sharedTracker] handleOpenUrl:url options:options];
+  return YES;
+}
+
+// Open URI-scheme for iOS 8 and below
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation {
+    NSLog(@"appsflyer Open URI-scheme for iOS 8 and below openURL %@, sourceApplication %@, annotation %@", url);
+    [[AppsFlyerTracker sharedTracker] handleOpenURL:url sourceApplication:sourceApplication withAnnotation:annotation];
+    return YES;
+}
+
+// Open Universal Links
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id> * _Nullable))restorationHandler {
+    NSLog(@"appsflyer Open Universal Links");
+    [[AppsFlyerTracker sharedTracker] continueUserActivity:userActivity restorationHandler:restorationHandler];
+    return YES;
+}
+
+// Report Push Notification attribution data for re-engagements
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"appsflyer Report Push Notification attribution data for re-engagements");
+    [[AppsFlyerTracker sharedTracker] handlePushNotification:userInfo];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
