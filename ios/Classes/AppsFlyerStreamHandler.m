@@ -41,9 +41,6 @@
                                      @"type":afOnInstallConversionDataLoaded,
                                      @"data":error.localizedDescription};
     NSData *JSON = [NSJSONSerialization dataWithJSONObject:errorMessage options:0 error:&error];
-    if (error) {
-        _eventSink([error localizedDescription]);
-    }
     NSString *JSONString = [[NSString alloc] initWithData:JSON encoding:NSUTF8StringEncoding];
     _eventSink(JSONString);
 }
