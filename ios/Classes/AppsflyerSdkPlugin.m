@@ -186,6 +186,8 @@
 }
 
 - (void)updateServerUninstallToken:(FlutterMethodCall*)call result:(FlutterResult)result{
+    NSString* deviceToken = call.arguments[@"token"];
+    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
     result(nil);
 }
 
