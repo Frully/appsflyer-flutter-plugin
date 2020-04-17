@@ -57,6 +57,11 @@
     [[AppsFlyerTracker sharedTracker] handlePushNotification:userInfo];
 }
 
+// 卸载跟踪
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
+}
+
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     
     if([@"initSdk" isEqualToString:call.method]){
@@ -186,8 +191,6 @@
 }
 
 - (void)updateServerUninstallToken:(FlutterMethodCall*)call result:(FlutterResult)result{
-    NSString* deviceToken = call.arguments[@"token"];
-    [[AppsFlyerTracker sharedTracker] registerUninstall:deviceToken];
     result(nil);
 }
 
